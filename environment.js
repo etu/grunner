@@ -60,6 +60,7 @@ var Environment = new Class({
 	 */
 	unpause: function() {
 		this.options.pause = false;
+		this.background.options.lastUpdateTime = Date.now();
 		this.drawFrame();
 	}
 });
