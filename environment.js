@@ -24,6 +24,8 @@ var Environment = new Class({
 			screen:     $('screen').getContext('2d')
 		}
 
+		this.background = new Background();
+
 		this.drawFrame(); // Start gameLoop
 	},
 	/**
@@ -31,6 +33,7 @@ var Environment = new Class({
 	 */
 	gameLoop: function() {
 		// Put things to draw here
+		this.background.move();
 
 		this.drawFrame(); // Keep gameLoop running.
 	},
