@@ -111,7 +111,7 @@ var Leaf = new Class({
 
 		// Use some extra data then normal delta to make speed make
 		// the animation frames at different rate on different leafs
-		this.options.frameDelta += (delta + forwardDelta) * (this.options.speed / 100);
+		this.options.frameDelta += (delta + Math.abs(forwardDelta)) * (this.options.speed / 100);
 	},
 	draw: function(ctx) {
 		var frameoffset = this.options.frame * this.options.width;
