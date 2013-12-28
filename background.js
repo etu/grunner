@@ -50,6 +50,9 @@ var Background = new Class({
 });
 
 
+/**
+ * Leaf class, handles leafs
+ */
 var Leaf = new Class({
 	Implements: [ Options ],
 	options: {
@@ -72,12 +75,18 @@ var Leaf = new Class({
 	move: function(delta, forwardDelta) {
 		// Move the star
 		this.options.y += (this.options.speed * delta);
+		if(forwardDelta != undefined) {
+			this.options.x -= (this.options.speed * forwardDelta);
+		}
 
 		// If outside, move to the right part of the screen
 		// And set a new speed.
 		if(this.options.y - this.options.width > env.options.height) {
 			this.options.y = -this.options.height;
 			this.options.speed = Number.random(50, 100);
+		}
+		if(this.options.x + this.options.width < 0) {
+			this.options.x = Number.random(0, env.options.width);
 		}
 	},
 	draw: function(ctx) {
