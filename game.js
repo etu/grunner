@@ -10,3 +10,7 @@ window.addEvent('load', function() {
 	new Environment();
 });
 
+window.addEvent('blur', function() {
+	env.pause();
+});
+
