@@ -56,13 +56,20 @@ var Background = new Class({
 var Leaf = new Class({
 	Implements: [ Options ],
 	options: {
-		color: '#00FF00',
-		speed: 0,
 		x: 0,
 		y: 0,
-		spin: 0,
+
+		speed: 0,
+
 		width:  40,
-		height: 40
+		height: 40,
+
+		frame: 0,
+		frames: 4,
+		frameDelta: 0,
+		frameChange: 250 / 1000,
+
+		spritemap: new Image()
 	},
 	initialize: function(options) {
 		if(options == undefined) options = {};
@@ -70,14 +77,16 @@ var Leaf = new Class({
 		options.x     = Number.random(0, env.options.width);
 		options.y     = Number.random(0, env.options.height);
 
+		this.options.spritemap.src = 'imgs/falling_leaf.png';
+
 		this.setOptions(options);
 	},
 	move: function(delta, forwardDelta) {
-		// Move the star
+		if(forwardDelta == undefined) forwardDelta = 0;
+
+		// Move the leaf
 		this.options.y += (this.options.speed * delta);
-		if(forwardDelta != undefined) {
-			this.options.x -= (this.options.speed * forwardDelta);
-		}
+		this.options.x -= (this.options.speed * forwardDelta);
 
 		// If outside, move to the right part of the screen
 		// And set a new speed.
@@ -88,10 +97,36 @@ var Leaf = new Class({
 		if(this.options.x + this.options.width < 0) {
 			this.options.x = Number.random(0, env.options.width);
 		}
+
+		// Handle frame change
+		if(this.options.frameDelta > this.options.frameChange) {
+			++this.options.frame;
+
+			if(this.options.frame > this.options.frames) {
+				this.options.frame = 0;
+			}
+
+			this.options.frameDelta = 0;
+		}
+
+		// Use some extra data then normal delta to make speed make
+		// the animation frames at different rate on different leafs
+		this.options.frameDelta += (delta + forwardDelta) * (this.options.speed / 100);
 	},
 	draw: function(ctx) {
-		ctx.fillStyle = this.options.color;
-		ctx.fillRect(Math.round(this.options.x), this.options.y, this.options.width, this.options.height); // X, Y, Width, Height
+		var frameoffset = this.options.frame * this.options.width;
+
+		ctx.drawImage(
+			this.options.spritemap,     // Image
+			frameoffset,                // Source X Position (within image)
+			0,                          // Source Y Position (within image)
+			this.options.width,         // Source Width
+			this.options.height,        // Source Height
+			Math.round(this.options.x), // Canvas X
+			Math.round(this.options.y), // Canvas Y
+			this.options.width,         // Canvas Width
+			this.options.height         // Canvas Height
+		);
 	}
 });
 
