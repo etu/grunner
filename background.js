@@ -10,6 +10,7 @@ var Background = new Class({
 		frameSkip:      false
 	},
 	leafs: [],
+	trees: [],
 	initialize: function(options) {
 		this.setOptions(options);
 
@@ -20,6 +21,7 @@ var Background = new Class({
 		for(var i = 0; i < Number.random(5, 10); i++) {
 			this.leafs.push(new Leaf());
 		}
+		this.trees.push(new Tree());
 	},
 	/**
 	 * Move/Draw function
@@ -29,6 +31,10 @@ var Background = new Class({
 
 		Array.each(this.leafs, function(leaf) { // Move all Leafs
 			leaf.move(delta, forwardDelta);
+		});
+
+		Array.each(this.trees, function(tree) { // Move all Trees
+			tree.move(delta, forwardDelta);
 		});
 
 		this.options.lastUpdateTime = Date.now();         // Save date to use for next delta calculation
@@ -42,6 +48,10 @@ var Background = new Class({
 	 */
 	draw: function() {
 		this.options.ctx.clearRect(0, 0, env.options.width, env.options.height); // Clear canvas
+
+		Array.each(this.trees, function(tree) { // Render Trees
+			tree.draw(this.options.ctx);
+		}, this);
 
 		Array.each(this.leafs, function(leaf) { // Render Leafs
 			leaf.draw(this.options.ctx);
@@ -133,6 +143,45 @@ var Leaf = new Class({
 			this.options.width,         // Canvas Width
 			this.options.height         // Canvas Height
 		);
+	}
+});
+
+
+var Tree = new Class({
+	Implements: [ Options ],
+	options: {
+		x: 200,
+		y: 100,
+		color: '#009900',
+		width: undefined,
+		height: undefined,
+
+		treeWidth: undefined,
+		treeColor: '#411616'
+	},
+	initialize: function(options) {
+		this.options.width  = Number.random(200, 250); // Random width of tree crown
+		this.options.height = Number.random(80,  120); // Random height of tree crown
+
+		this.options.treeWidth = this.options.width / Number.random(4, 5); // Base width of tree on size of crown, somewhat
+
+		this.setOptions(options);
+	},
+	move: function(delta, forwardDelta) {
+	},
+	draw: function(ctx) {
+		// Drawn crown of tree
+		ctx.fillStyle = this.options.color;
+		ctx.fillRect(Math.floor(this.options.x), Math.floor(this.options.y), this.options.width, this.options.height);
+
+		// calculate tree
+		var treeX = Math.floor(this.options.width / 2 - this.options.treeWidth / 2 + this.options.x); // Adjust tree to center point below tree crown
+		var treeY = Math.floor(this.options.y + this.options.height);                                 // Adjust top left of tree
+		var treeH = Math.floor(env.options.height - treeY);                                           // Reach all the way down to the bottom of the screen
+
+		// Draw tree
+		ctx.fillStyle = this.options.treeColor;
+		ctx.fillRect(treeX, treeY, this.options.treeWidth, treeH);
 	}
 });
 
