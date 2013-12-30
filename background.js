@@ -68,6 +68,7 @@ var Leaf = new Class({
 		frames: 4,
 		frameDelta: 0,
 		frameChange: 250 / 1000,
+		frameDirection: 1,
 
 		spritemap: new Image()
 	},
@@ -100,10 +101,15 @@ var Leaf = new Class({
 
 		// Handle frame change
 		if(this.options.frameDelta > this.options.frameChange) {
-			++this.options.frame;
+			this.options.frame += this.options.frameDirection;
 
 			if(this.options.frame > this.options.frames) {
-				this.options.frame = 0;
+				this.options.frameDirection *= -1;
+				this.options.frame--;
+			}
+			if(this.options.frame < 0) {
+				this.options.frameDirection *= -1;
+				this.options.frame++;
 			}
 
 			this.options.frameDelta = 0;
