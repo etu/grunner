@@ -21,7 +21,10 @@ var Background = new Class({
 		for(var i = 0; i < Number.random(5, 10); i++) {
 			this.leafs.push(new Leaf());
 		}
-		this.trees.push(new Tree());
+
+		Array.each([env.options.width, env.options.width / 2, 0], function(x) {
+			this.trees.push(new Tree({x: x}));
+		}, this);
 	},
 	/**
 	 * Move/Draw function
@@ -147,6 +150,9 @@ var Leaf = new Class({
 });
 
 
+/**
+ * Tree Class
+ */
 var Tree = new Class({
 	Implements: [ Options ],
 	options: {
@@ -160,14 +166,19 @@ var Tree = new Class({
 		treeColor: '#411616'
 	},
 	initialize: function(options) {
-		this.options.width  = Number.random(200, 250); // Random width of tree crown
-		this.options.height = Number.random(80,  120); // Random height of tree crown
+		this.randomize();
 
-		this.options.treeWidth = this.options.width / Number.random(4, 5); // Base width of tree on size of crown, somewhat
+		this.options.x      = env.options.width - this.options.width; // Some X
 
 		this.setOptions(options);
 	},
 	move: function(delta, forwardDelta) {
+		this.options.x -= delta * 100;
+
+		if(this.options.x < this.options.width * -1) {
+			this.options.x = env.options.width;
+			this.randomize();
+		}
 	},
 	draw: function(ctx) {
 		// Drawn crown of tree
@@ -182,6 +193,13 @@ var Tree = new Class({
 		// Draw tree
 		ctx.fillStyle = this.options.treeColor;
 		ctx.fillRect(treeX, treeY, this.options.treeWidth, treeH);
+	},
+	randomize: function() { // Randomize size of tree
+		this.options.y      = Number.random(150, 250); // Random Y
+		this.options.width  = Number.random(200, 250); // Random width of tree crown
+		this.options.height = Number.random(80,  120); // Random height of tree crown
+
+		this.options.treeWidth = this.options.width / Number.random(4, 5); // Base width of tree on size of crown, somewhat
 	}
 });
 
