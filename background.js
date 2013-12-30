@@ -17,7 +17,7 @@ var Background = new Class({
 		this.options.ctx = env.options.ctxs.background;
 
 		// Populate list of Leaf locations
-		for(var i = 0; i < Number.random(10, 25); i++) {
+		for(var i = 0; i < Number.random(5, 10); i++) {
 			this.leafs.push(new Leaf());
 		}
 	},
