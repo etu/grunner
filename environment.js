@@ -54,11 +54,13 @@ var Environment = new Class({
 	 */
 	pause: function() {
 		this.options.pause = true;
+		$('pausescreen').setStyle('display', 'block');
 	},
 	/**
 	 * Unpause function
 	 */
 	unpause: function() {
+		$('pausescreen').setStyle('display', 'none');
 		this.options.pause = false;
 		this.background.options.lastUpdateTime = Date.now();
 		this.drawFrame();
